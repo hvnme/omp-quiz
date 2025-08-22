@@ -1,0 +1,24 @@
+/* Сброс стилей для совместимости */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Убедимся, что body и html занимают весь экран */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Центрирование главного контейнера */
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Минимальная высота - 100% экрана */
+  background-color: #fff; /* Белый фон для всей страницы */
+  font-family: Arial, sans-serif; /* Глобальный шрифт */
+}

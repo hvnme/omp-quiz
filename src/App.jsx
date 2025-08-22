@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await fetch("https://omp-quiz.vercel.app/api/server");
+        const res = await fetch("/api/server");
         const json = await res.json();
 
         if (json.status === "ok" && json.data?.victorina4webapp) {

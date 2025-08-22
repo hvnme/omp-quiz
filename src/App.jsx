@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 function App() {
-  const [quizzes, setQuizzes] = useState([]); // список усіх вікторин
-  const [selectedQuiz, setSelectedQuiz] = useState(null); // обрана вікторина
+  const [quizzes, setQuizzes] = useState([]);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -17,7 +17,6 @@ function App() {
       ? ((currentQuestionIndex + 1) / questions.length) * 100
       : 0;
 
-  // завантажуємо список вікторин
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
@@ -27,7 +26,6 @@ function App() {
         if (json.status === "ok" && json.data?.victorina4webapp) {
           const parsed = JSON.parse(json.data.victorina4webapp);
 
-          // перетворюємо у масив
           const quizzesArray = Object.values(parsed).map((quiz) => {
             const normalizedQuestions = quiz.questions.map((q) => {
               const optionsArray = q.options
@@ -62,7 +60,6 @@ function App() {
     fetchQuizzes();
   }, []);
 
-  // таймер дати/часу
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
@@ -101,12 +98,10 @@ function App() {
     setQuestions([]);
   };
 
-  // Якщо ще вантажиться
   if (loading) {
     return <div className="App">⏳ Завантаження вікторин...</div>;
   }
 
-  // Якщо ще не обрали вікторину
   if (!selectedQuiz) {
     return (
       <div className="App">
@@ -134,7 +129,6 @@ function App() {
     );
   }
 
-  // Якщо обрана вікторина
   return (
     <div className="App">
       {currentQuestionIndex >= questions.length ? (

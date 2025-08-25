@@ -199,20 +199,20 @@ function App() {
                   );
                 })}
               </div>
-              {selectedOption !== null && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.14 }}
-                  onClick={handleNextQuestion}
-                  className="next-button"
-                >
-                  {currentQuestionIndex === questions.length - 1
-                    ? "Завершити вікторину"
-                    : "Наступне запитання"}
-                </motion.button>
-              )}
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.14 }}
+                onClick={handleNextQuestion}
+                className="next-button"
+                disabled={selectedOption === null}
+              >
+                {currentQuestionIndex === questions.length - 1
+                  ? "Завершити вікторину"
+                  : "Наступне запитання"}
+              </motion.button>
+
             </motion.div>
           </AnimatePresence>
         </>

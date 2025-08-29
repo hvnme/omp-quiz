@@ -18,6 +18,13 @@ function App() {
       : 0;
 
   useEffect(() => {
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp
+      tg.expand()
+    }
+  }, [])
+
+  useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const res = await fetch("/api/server");

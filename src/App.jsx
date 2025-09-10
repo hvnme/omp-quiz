@@ -174,7 +174,7 @@ function App() {
               className="question-card"
             >
               <h2>
-                {currentQuestionIndex + 1}. {currentQuestion.question}
+                {currentQuestion.question}
               </h2>
               <div className="options-container">
                 {currentQuestion.options.map((option, index) => {

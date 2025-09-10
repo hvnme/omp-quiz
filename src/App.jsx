@@ -128,7 +128,7 @@ function App() {
               }}
             >
               <h3>{quiz.title}</h3>
-              <p>{quiz.questions.length} запитань</p>
+              {/* <p>{quiz.questions.length} запитань</p> */}
             </motion.div>
           ))}
         </div>

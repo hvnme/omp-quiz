@@ -158,10 +158,10 @@ function App() {
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              <span className="question-number">
+              {/* <span className="question-number">
                 Питання {currentQuestionIndex + 1}/{questions.length}
               </span>
-              <span className="datetime">{formatDateTime(currentDateTime)}</span>
+              <span className="datetime">{formatDateTime(currentDateTime)}</span> */}
             </div>
           </div>
           <AnimatePresence mode="wait">

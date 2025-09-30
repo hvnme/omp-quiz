@@ -22,7 +22,6 @@ jobs:
       - name: Build (Vite)
         env:
           CI: "true"
-          # прокинь свои VITE_* сюда, если надо:
           # VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: |
           npm ci

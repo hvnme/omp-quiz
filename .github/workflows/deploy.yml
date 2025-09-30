@@ -1,0 +1,58 @@
+name: Deploy Vite app via SFTP (password)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Build (Vite)
+        env:
+          CI: "true"
+          # прокинь свои VITE_* сюда, если надо:
+          # VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          npm ci
+          npm run build
+          test -d dist || (echo "dist missing after build"; exit 1)
+
+      # === Загрузка только dist/ по SFTP (логин/пароль) ===
+      - name: Upload dist/ via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
+        with:
+          server: ${{ secrets.VPS_HOST }}          # или оставь свои FTP_SERVER/USERNAME/PASSWORD
+          port: ${{ secrets.VPS_PORT }}            # 22
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASS }}
+          local_path: 'dist/*'                     # именно содержимое dist/
+          remote_path: ${{ secrets.VPS_PATH }}     # ДОЛЖЕН = DocumentRoot (напр., /var/www/webapp.ribas.botsband-dev.com)
+          delete_remote_files: true                # чистим старые файлы
+
+      # === Пост-команды: права + reload Apache по паролю ===
+      - name: Post-deploy (permissions + apache reload)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASS }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            DIR='${{ secrets.VPS_PATH }}'
+            sudo chown -R $USER:www-data "$DIR"
+            sudo find "$DIR" -type d -exec chmod 775 {} \;
+            sudo find "$DIR" -type f -exec chmod 664 {} \;
+            sudo systemctl reload apache2

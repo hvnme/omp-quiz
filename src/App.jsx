@@ -19,15 +19,15 @@ function App() {
 
   useEffect(() => {
     if (window.Telegram && window.Telegram.WebApp) {
-      const tg = window.Telegram.WebApp
-      tg.expand()
+      const tg = window.Telegram.WebApp;
+      tg.expand();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await fetch("/api/server");
+        const res = await fetch("/quiz");
         const json = await res.json();
 
         if (json.status === "ok" && json.data?.victorina4webapp) {
@@ -39,7 +39,9 @@ function App() {
                 .split("\n")
                 .map((line) => line.trim())
                 .filter(Boolean)
-                .map((line) => line.replace(/^(?:[а-яА-Яa-zA-Z]\.?|\d+)[.)]?\s*/, ""));
+                .map((line) =>
+                  line.replace(/^(?:[а-яА-Яa-zA-Z]\.?|\d+)[.)]?\s*/, "")
+                );
 
               return {
                 question: q.title,
@@ -116,21 +118,24 @@ function App() {
           <div className="quiz-title">Оберіть вікторину зі списку 👇</div>
         </div>
         <div className="quiz-list">
-          {quizzes.map((quiz) => (
-            <motion.div
-              key={quiz.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="quiz-card"
-              onClick={() => {
-                setSelectedQuiz(quiz);
-                setQuestions(quiz.questions);
-              }}
-            >
-              <h3>{quiz.title}</h3>
-              {/* <p>{quiz.questions.length} запитань</p> */}
-            </motion.div>
-          ))}
+          {quizzes.length === 0 ? (
+            <div className="no-quizzes">Чекайте нової вікторини</div>
+          ) : (
+            quizzes.map((quiz) => (
+              <motion.div
+                key={quiz.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="quiz-card"
+                onClick={() => {
+                  setSelectedQuiz(quiz);
+                  setQuestions(quiz.questions);
+                }}
+              >
+                <h3>{quiz.title}</h3>
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
     );
@@ -158,9 +163,6 @@ function App() {
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              {/* <span className="question-number">
-                Питання {currentQuestionIndex + 1}/{questions.length}
-              </span> */}
               <span className="datetime">{formatDateTime(currentDateTime)}</span>
             </div>
           </div>
@@ -173,15 +175,10 @@ function App() {
               transition={{ duration: 0.18, ease: "easeInOut" }}
               className="question-card"
             >
-              <h2>
-                {currentQuestion.question}
-              </h2>
+              <h2>{currentQuestion.question}</h2>
               <div className="options-container">
                 {currentQuestion.options.map((option, index) => {
-                  const letters = ["а", "б", "в", "г", "д", "е", "є", "ж", "з"];
-                  const letter = letters[index]
-                    ? letters[index]
-                    : String.fromCharCode(1072 + index);
+                  const letter = String.fromCharCode(65 + index); // A, B, C...
                   return (
                     <motion.button
                       key={index}
@@ -195,11 +192,11 @@ function App() {
                       <span
                         style={{
                           marginRight: 8,
-                          textTransform: "lowercase",
+                          textTransform: "uppercase",
                           fontWeight: "normal",
                         }}
                       >
-                        {letter}.
+                        {letter})
                       </span>
                       {option}
                     </motion.button>
@@ -219,7 +216,6 @@ function App() {
                   ? "Завершити вікторину"
                   : "Наступне запитання"}
               </motion.button>
-
             </motion.div>
           </AnimatePresence>
         </>
